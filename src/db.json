@@ -1,0 +1,39 @@
+{
+    "data": [
+      {
+        "id": 1,
+        "name": "Nguyễn Minh Tiến",
+        "email": "tien@gmail.com",
+        "address": "Hà Nội",
+        "phone": "098765442"
+      },
+      {
+        "id": 1,
+        "name": "Nguyễn Minh ",
+        "email": "minh@gmail.com",
+        "address": "Hà Nội",
+        "phone": "098765442"
+      },
+      {
+        "id": 1,
+        "name": "Nguyễn Minh Tiến",
+        "email": "tien@gmail.com",
+        "address": "Hà Nội",
+        "phone": "098765442"
+      },
+      {
+        "id": 1,
+        "name": "Nguyễn Minh Tiến",
+        "email": "tien@gmail.com",
+        "address": "Hà Nội",
+        "phone": "098765442"
+      },
+      {
+        "id": 1,
+        "name": "Nguyễn Minh Tiến",
+        "email": "tien@gmail.com",
+        "address": "Hà Nội",
+        "phone": "098765442"
+      }
+    ]
+  }

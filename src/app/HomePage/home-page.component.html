@@ -1,0 +1,87 @@
+
+<div class="row">
+  <div class="col-6">
+    <ng-template #content let-c="close" let-d="dismiss">
+      <div class="modal-header">
+        <h4 class="modal-title">Add User</h4>
+      </div>
+      <div class="modal-body">
+        <form name="form" [formGroup]="AddUser" (ngSubmit)="onSubmit()">
+          <div class="position-relative form-group">
+            <label for="name">Name</label>
+            <input name="name" id="name" formControlName="name" type="text" class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.name.errors}">
+            <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+               <div *ngIf="f.name.errors.required">Please enter name</div>
+            </div>
+          </div>
+          <div class="position-relative form-group">
+            <label for="email">Email</label>
+            <input name="email" id="email" formControlName="email" type="text" class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.email.errors}">
+            <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+               <div *ngIf="f.email.errors.required">Please enter email</div>
+            </div>
+          </div>
+          <div class="position-relative form-group">
+            <label for="phone">Phone</label>
+            <input name="phone" id="phone" formControlName="phone" type="text" class="form-control"
+              [ngClass]="{ 'is-invalid': submitted && f.phone.errors}">
+            <div *ngIf="submitted && f.phone.errors" class="invalid-feedback">
+               <div *ngIf="f.phone.errors.required">Please enter phone</div>
+            </div>
+          </div>
+          <div class="position-relative form-group">
+            <label for="address">Adress</label>
+            <input name="address" id="address" formControlName="address" type="text" class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f.address.errors}">
+            <div *ngIf="submitted && f.address.errors" class="invalid-feedback">
+               <div *ngIf="f.address.errors.required">Please enter address</div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="c('Close click')">Hủy</button>
+            <button type="submit" class="btn btn-primary">Thêm</button>
+          </div>
+        </form>
+      </div>
+    </ng-template>
+    <button type="button" class="btn-shadow d-inline-flex align-items-center btn btn-success" (click)="open(content)">
+        <fa class="mr-2" name="plus"></fa>
+        Add user
+    </button>
+    <div class="main-card mb-3 card" >
+      <div class="card-body">
+        <table class="mb-0 table table-bordered">
+          <thead>
+          <tr>
+            <th>STT</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Address</th>
+            <th></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let item of datas; let i = index" >
+            <td>{{ i + 1 }}</td>
+            <td>{{item.name}}</td>
+            <td>{{item.email}}</td>
+            <td>{{item.phone}}</td>
+            <td>{{item.address}}</td>
+<!--            <td><button type="button" class="btn btn-danger" (click)="Delete(item.id)" >Delete</button></td>-->
+<!--            <td><i class="bi bi-trash" (click)="Delete(item.id)"></i></td>-->
+            <td><svg (click)="Delete(item.id)" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+              </svg>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+         <p *ngIf="datas.length == 0" style="text-align: center;margin-top: 20px;font-size: large;"> Không có user nào ! </p>
+      </div>
+    </div>
+  </div>
+</div>
