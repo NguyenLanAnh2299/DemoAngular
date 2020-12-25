@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { HomePageModule } from './HomePage/home-page.module';
 import {ModalsComponent} from './modals/modals.component';
 import { UserComponent } from './user/user.component';
+import { PopupComponent } from './popup/popup.component';
 
 
 
@@ -13,7 +14,8 @@ import { UserComponent } from './user/user.component';
   declarations: [
     AppComponent,
     ModalsComponent,
-    UserComponent
+    UserComponent,
+    PopupComponent
   ],
   imports: [
     BrowserModule,

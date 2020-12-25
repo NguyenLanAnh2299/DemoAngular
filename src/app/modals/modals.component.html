@@ -1,1 +1,12 @@
-<p>modals works!</p>
+
+<ng-template #Delete let-c="close" let-d="dismiss">
+  <div class="modal-body">
+    <form>
+      <div class="position-relative form-group">
+        <label for="confirm">Do you want delete</label>
+        <button id="confirm" type="button" class="btn btn-secondary" (click)="c('Close click')">Hủy</button>
+        <button type="submit" class="btn btn-primary">Thêm</button>
+      </div>
+    </form>
+  </div>
+</ng-template>

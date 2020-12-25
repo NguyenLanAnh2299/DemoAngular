@@ -9,6 +9,7 @@ const httpOptions = {
 const getAllUser = 'https://5fdb378791f19e0017333ccb.mockapi.io/user/api';
 const deleteUser = 'https://5fdb378791f19e0017333ccb.mockapi.io/user/api/';
 const addUser = 'https://5fdb378791f19e0017333ccb.mockapi.io/user/api';
+const  updateUser = 'https://5fdb378791f19e0017333ccb.mockapi.io/user/api/';
 @Injectable({
   providedIn: 'root'
 })
@@ -21,9 +22,14 @@ export class HomePageService {
   Delete(id: number): Observable<any> {
     return this.httpClient.delete(deleteUser + id).pipe();
   }
-
   // tslint:disable-next-line:typedef
   public addUser(objUser: any) {
     return this.httpClient.post<any>(addUser, objUser);
+  }
+  update(rq: any): Observable<any> {
+    return this.httpClient.put(updateUser + rq.id, rq).pipe();
+  }
+  getUser(id: number): Observable<any> {
+    return this.httpClient.get(updateUser + id).pipe();
   }
 }
