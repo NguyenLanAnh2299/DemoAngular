@@ -1,4 +1,4 @@
-import { from } from 'rxjs';
+import {from} from 'rxjs';
 import {Component, ElementRef, OnInit, Output, ViewChild} from '@angular/core';
 import {User} from '../_model/user';
 import {HomePageService} from '../_service/home-page.service';
@@ -8,16 +8,17 @@ import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 // @ts-ignore
 import {EventEmitter} from 'events';
 import {PopupComponent} from '../popup/popup.component';
+import {PagerService} from '../_service/pager.service';
 
 @Component({
   // tslint:disable-next-line:component-selector
-    selector: 'home-page-app',
-    styleUrls: ['./home-page.component.css'],
-    templateUrl: './home-page.component.html'
+  selector: 'home-page-app',
+  styleUrls: ['./home-page.component.css'],
+  templateUrl: './home-page.component.html'
 })
 export class HomePageComponent implements OnInit {
   datas: User[] = [];
-  AddUser!: FormGroup ;
+  AddUser!: FormGroup;
   email?: string;
   name?: string;
   modalReference: any;
@@ -27,11 +28,25 @@ export class HomePageComponent implements OnInit {
   dataUser!: User;
   public isActive: any;
   closeResult?: string;
+  show = false;
+  pager: any = {};
+  pagedItems!: any[];
+
+  selectListItem = this.datas.filter(value => {
+    return value.active;
+  });
 
   @Output() closeModalEvent = new EventEmitter<boolean>();
-  constructor(private homepageService: HomePageService,  private modalService: NgbModal, private formBuilder: FormBuilder) { }
+
+  // tslint:disable-next-line:max-line-length
+  constructor(private homepageService: HomePageService, private modalService: NgbModal, private formBuilder: FormBuilder, private pagerService: PagerService) {
+    // @ts-ignore
+    this.page = 1;
+  }
+
   // tslint:disable-next-line:use-lifecycle-interface
   ngOnInit(): void {
+    // @ts-ignore
     this.getAll();
 
     this.AddUser = this.formBuilder.group({
@@ -47,6 +62,25 @@ export class HomePageComponent implements OnInit {
       address: new FormControl('', Validators.required),
     });
   }
+
+  // tslint:disable-next-line:typedef
+  onClick() {
+    this.show = !this.show;
+  }
+
+  // tslint:disable-next-line:typedef
+  onChange(id: any) {
+    for (let i = 0; i < this.datas.length; i++) {
+      if (this.datas[i].id === id) {
+        this.datas[i] = {...this.datas[i], active: !this.datas[i].active};
+      }
+    }
+    console.log(this.datas);
+    this.selectListItem = this.datas.filter(value => {
+      return value.active;
+    });
+  }
+
   // tslint:disable-next-line:typedef
   open(content: any) {
     this.AddUser?.reset();
@@ -59,6 +93,7 @@ export class HomePageComponent implements OnInit {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
   }
+
   private getDismissReason(reason: any): string {
     if (reason === ModalDismissReasons.ESC) {
       return 'by pressing ESC';
@@ -68,75 +103,83 @@ export class HomePageComponent implements OnInit {
       return `with: ${reason}`;
     }
   }
+
   // tslint:disable-next-line:typedef
-  getAll() {
+  getAll(page: number) {
+    // @ts-ignore
     this.homepageService.getAll().subscribe(
       (res: any) => {
         this.datas = res;
-      },
-      error =>
-        console.log(3453)
+        // console.log(this.datas);
+        setTimeout(() => {
+          this.setPage(1);
+        }, 1000);
+      }
     );
+    setTimeout(() => {
+      // console.log(this.datas, 'aaaa');
+      this.setPage(1);
+    }, 1000);
+    // this.setPage(1);
   }
+
   // tslint:disable-next-line:typedef
-  getUser(id: number) {
-    this.homepageService.getUser(id).subscribe(
-      (res: any) => {
-        this.dataUser = res;
-        console.log(this.dataUser);
-        this.updateForm.setValue({
-          name: this.dataUser.name,
-          email: this.dataUser.email,
-          phone: this.dataUser.phone,
-          address: this.dataUser.address,
-        });
+  setPage(page: number) {
+    if (this.pager) {
+      if (page < 1 || page > this.pager.totalPages) {
+        return;
+      }
+    }
+    // @ts-ignore
+    this.pager = this.pagerService.getPager(this.datas.length, page, true, 5 );
+    console.log('pager', this.pager);
+
+    // @ts-ignore
+    this.pagedItems = this.datas.slice(this.pager.startIndex, this.pager.endIndex + 1);
+    console.log('pagedItems', this.pagedItems);
+  }
+
+// tslint:disable-next-line:typedef no-unused-expression
+  get f() {// @ts-ignore
+    return this.AddUser.controls; }
+  // tslint:disable-next-line:typedef
+  get checkUpdateForm() { return this.updateForm.controls; }
+
+
+  // tslint:disable-next-line:typedef
+  onSubmit() {
+    this.submitted = true;
+    if (this.AddUser?.invalid){
+      return;
+    }
+    const name = this.f.name.value;
+    const email = this.f.email.value;
+    const address = this.f.address.value;
+    const phone = this.f.phone.value;
+    this.homepageService.addUser({name, email, address, phone}).subscribe(
+      res => {
+        this.modalReference.close();
+        alert('Thêm  thành công.');
+        // @ts-ignore
+        this.getAll();
+      },
+      error => {
+        this.existId = true;
+        alert('Thêm thất bại!');
+        console.log(error.message);
       }
     );
   }
   // tslint:disable-next-line:typedef
   openUpdateUser({updateUser, id}: { updateUser: any, id: number }) {
     this.submitted = false;
+    // @ts-ignore
     this.getUser(id);
     this.modalService.open(updateUser).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
-  }
-  // tslint:disable-next-line:typedef
-  // Delete(id: number) {
-  //   const confirmResult = confirm('Bạn có muốn xóa người dùng này không?');
-  //   if (confirmResult) {
-  //     this.homepageService.Delete(id).subscribe(res => {
-  //       alert('Delete ok');
-  //       this.getAll();
-  //     });
-  //   }
-  // }
-  // @ts-ignore
-  // tslint:disable-next-line:typedef
-  openModal(component, title, content, option) {
-    const modalRef = this.modalService.open(component, option);
-    modalRef.componentInstance.title = title;
-    modalRef.componentInstance.message = content;
-    return modalRef.result;
-  }
-  // tslint:disable-next-line:typedef
-  onDeleteEvent(id: number){
-    const title = '';
-    const message = 'Bạn có chắc chắn muốn xoá ?';
-    const option = {size: 'sm'};
-    this.openModal(PopupComponent, title, message, option).then(
-      result => {
-        this.homepageService.Delete(id).subscribe(res => {
-          alert('Deleted');
-          this.getAll();
-        });
-      },
-      dismiss => {
-        console.log('Huỷ xoá');
-      }
-    );
   }
   // tslint:disable-next-line:typedef
   onSubmitUpdate(id: any) {
@@ -155,44 +198,42 @@ export class HomePageComponent implements OnInit {
     };
     this.homepageService.update(request).subscribe(rs => {
       setTimeout(() => {
-        alert('Thay đổi thành công');
+        alert('Success');
       }, 800);
+      // @ts-ignore
       this.getAll();
       // @ts-ignore
       const btn: HTMLElement = document.getElementById('btnCloseUpdate');
       btn.click();
     });
   }
+  // @ts-ignore
   // tslint:disable-next-line:typedef
-  get f() {// @ts-ignore
-    return this.AddUser.controls; }
+  openModal(component, title, content, option) {
+    const modalRef = this.modalService.open(component, option);
+    modalRef.componentInstance.title = title;
+    modalRef.componentInstance.message = content;
+    return modalRef.result;
+  }
   // tslint:disable-next-line:typedef
-  get checkUpdateForm() { return this.updateForm.controls; }
-  // tslint:disable-next-line:typedef
-  onSubmit() {
-    this.submitted = true;
-    if (this.AddUser?.invalid){
-      return;
-    }
-    const name = this.f.name.value;
-    const email = this.f.email.value;
-    const address = this.f.address.value;
-    const phone = this.f.phone.value;
-    this.homepageService.addUser({name, email, address, phone}).subscribe(
-      res => {
-        this.modalReference.close();
-        alert('Thêm  thành công.');
-        this.getAll();
+  onDeleteEvent(id: number) {
+    const title = '';
+    const message = 'Are you sure delete this user ?';
+    const option = {size: 'sm'};
+    this.openModal(PopupComponent, title, message, option).then(
+      result => {
+        this.homepageService.Delete(id).subscribe(res => {
+          alert('Deleted');
+          // @ts-ignore
+          this.getAll();
+        });
       },
-      error => {
-        this.existId = true;
-        alert('Thêm thất bại!');
-        console.log(error.message);
+      dismiss => {
+        console.log('Huỷ xoá');
       }
     );
   }
-
-  // tslint:disable-next-line:typedef
+// tslint:disable-next-line:typedef
   Search() {
     if (this.email !== '') {
       this.datas = this.datas.filter(res => {

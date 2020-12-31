@@ -7,6 +7,8 @@ import { HomePageModule } from './HomePage/home-page.module';
 import {ModalsComponent} from './modals/modals.component';
 import { UserComponent } from './user/user.component';
 import { PopupComponent } from './popup/popup.component';
+import { PaginationComponent } from './pagination/pagination.component';
+import {PagerService} from './_service/pager.service';
 
 
 
@@ -15,14 +17,20 @@ import { PopupComponent } from './popup/popup.component';
     AppComponent,
     ModalsComponent,
     UserComponent,
-    PopupComponent
+    PopupComponent,
+    PaginationComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HomePageModule
   ],
-  providers: [],
+  providers: [
+    PagerService
+  ],
+  exports: [
+    PaginationComponent
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
