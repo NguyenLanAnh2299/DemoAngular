@@ -171,9 +171,23 @@ export class HomePageComponent implements OnInit {
     );
   }
   // tslint:disable-next-line:typedef
+  getUser(id: number) {
+    this.homepageService.getUser(id).subscribe(
+      (res: any) => {
+        this.dataUser = res;
+        console.log(this.dataUser);
+        this.updateForm.setValue({
+          name: this.dataUser.name,
+          email: this.dataUser.email,
+          phone: this.dataUser.phone,
+          address: this.dataUser.address,
+        });
+      }
+    );
+  }
+  // tslint:disable-next-line:typedef
   openUpdateUser({updateUser, id}: { updateUser: any, id: number }) {
     this.submitted = false;
-    // @ts-ignore
     this.getUser(id);
     this.modalService.open(updateUser).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
