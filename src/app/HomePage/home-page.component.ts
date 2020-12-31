@@ -249,13 +249,13 @@ export class HomePageComponent implements OnInit {
   }
 // tslint:disable-next-line:typedef
   Search() {
-    if (this.email !== '') {
+    if (this.name !== '') {
       this.datas = this.datas.filter(res => {
         // tslint:disable-next-line:no-non-null-assertion
-        return (res.email.toLocaleLowerCase()).match(this.email!.toLocaleLowerCase());
+        return (res.name.toLocaleLowerCase()).match(this.name!.toLocaleLowerCase());
       });
     }
-    else if (this.email === '') {
+    else if (this.name === '') {
       this.ngOnInit();
     }
   }
